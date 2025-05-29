@@ -1,7 +1,39 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.contrib.auth import authenticate
 from .serializers import EstudianteSerializer, DocenteSerializer, PadreFamiliaSerializer, UsuarioSerializer
+
+class LoginUsuarioView(APIView):
+    def post(self, request):
+        username = request.data.get("username")
+        password = request.data.get("password")
+
+        if not username or not password:
+            return Response({"error": "Se requieren 'username' y 'password'."},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        # Autenticar al usuario
+        usuario = authenticate(username=username, password=password)
+
+        if usuario:
+            # Serializar los datos completos del usuario
+            serializer = UsuarioSerializer(usuario)
+
+            # Retornar respuesta con info del usuario, incluyendo rol
+            return Response({
+                "mensaje": "Inicio de sesión exitoso.",
+                "usuario": {
+                    "id": usuario.id,
+                    "username": usuario.username,
+                    "correo": usuario.correo,
+                    "rol": usuario.rol.nombre
+                }
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({"error": "Credenciales inválidas."},
+                            status=status.HTTP_401_UNAUTHORIZED)
+
 
 class RegistroUsuarioView(APIView):
     def post(self, request):
