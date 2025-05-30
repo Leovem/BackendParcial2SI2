@@ -6,7 +6,9 @@ from .views import (
     EditarEstudianteView,
     EditarDocenteView, 
     EditarPadreFamiliaView,
-    EditarUsuarioView
+    EditarUsuarioView,
+    HijosDePadreView,
+    CrearRelacionEstudiantePadreView
 )
 
 urlpatterns = [
@@ -17,4 +19,6 @@ urlpatterns = [
     path('docentes/<int:pk>/editar/', EditarDocenteView.as_view(), name='editar-docente'),
     path('padres/<int:pk>/editar/', EditarPadreFamiliaView.as_view(), name='editar-padre'),
     path('usuarios/<int:pk>/editar/', EditarUsuarioView.as_view(), name='editar_usuario'),
+    path('padre/<int:padre_id>/hijos/', HijosDePadreView.as_view(), name='hijos-de-padre'),
+    path('relacion-estudiante-padre/', CrearRelacionEstudiantePadreView.as_view(), name='crear-relacion'),
 ]

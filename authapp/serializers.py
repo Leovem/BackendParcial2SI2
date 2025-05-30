@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Persona, Estudiante, Docente, PadreFamilia, Rol
+from .models import Usuario, Persona, Estudiante, Docente, PadreFamilia, Rol, EstudiantePadre
 from django.contrib.auth.hashers import make_password
 
 
@@ -117,5 +117,8 @@ class PadreFamiliaSerializer(serializers.ModelSerializer):
         persona = PersonaSerializer().create(persona_data)
         return PadreFamilia.objects.create(persona=persona)
     
-
+class EstudiantePadreSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = EstudiantePadre
+        fields = '__all__'
 

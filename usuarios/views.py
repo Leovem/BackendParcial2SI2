@@ -1,8 +1,10 @@
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics
 from rest_framework import status
-from authapp.models import Estudiante, Docente, PadreFamilia, Usuario
+from authapp.models import Estudiante, Docente, PadreFamilia, Usuario, EstudiantePadre
+from authapp.serializers import (EstudianteSerializer, EstudiantePadreSerializer)
 from .serializers import (
     EstudianteReadSerializer,
     DocenteReadSerializer,
@@ -98,3 +100,19 @@ class EditarUsuarioView(APIView):
             }, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class HijosDePadreView(APIView):
+    def get(self, request, padre_id):
+        try:
+            padre = PadreFamilia.objects.get(id=padre_id)
+        except PadreFamilia.DoesNotExist:
+            return Response({"detail": "Padre no encontrado"}, status=status.HTTP_404_NOT_FOUND)
+
+        relaciones = EstudiantePadre.objects.filter(padre=padre)
+        estudiantes = [rel.estudiante for rel in relaciones]
+        serializer = EstudianteSerializer(estudiantes, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+class CrearRelacionEstudiantePadreView(generics.CreateAPIView):
+    queryset = EstudiantePadre.objects.all()
+    serializer_class = EstudiantePadreSerializer
