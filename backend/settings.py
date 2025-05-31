@@ -49,7 +49,9 @@ INSTALLED_APPS = [
     'authapp',
     'rest_framework',
     'corsheaders',
-    'usuarios'
+    'usuarios',
+    'estructura_academica',
+    'inscripcion'
 ]
 
 MIDDLEWARE = [
