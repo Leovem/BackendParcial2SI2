@@ -5,6 +5,7 @@ from rest_framework.response import Response
 from .models import Curso, Inscripcion, Materia, CursoMateria
 from .serializers import CursoSerializer, InscripcionSerializer, MateriaSerializer, CursoMateriaSerializer
 
+
 class CursoViewSet(viewsets.ModelViewSet):
     queryset = Curso.objects.all()
     serializer_class = CursoSerializer
@@ -36,6 +37,43 @@ class CursoViewSet(viewsets.ModelViewSet):
             })
 
         return Response(datos)
+
+    @action(detail=True, methods=['get'], url_path='estudiantes')
+    def estudiantes_por_curso(self, request, pk=None):
+        curso = self.get_object()
+        gestion_id = request.query_params.get('gestion_id')
+
+        if not gestion_id:
+            return Response({'error': 'Debe proporcionar gestion_id como query param.'}, status=400)
+
+        if str(curso.gestion.id) != gestion_id:
+            return Response({'error': 'El curso no pertenece a la gestión indicada.'}, status=400)
+
+        inscripciones = Inscripcion.objects.filter(
+            curso=curso, gestion_id=gestion_id
+        ).select_related('estudiante__persona')
+
+        estudiantes = []
+        for insc in inscripciones:
+            persona = insc.estudiante.persona
+            estudiantes.append({
+                'id': insc.estudiante.id,
+                'nombre_completo': f'{persona.nombres} {persona.apellidos}',
+                'ci': persona.ci,
+                'fecha_inscripcion': insc.fecha_inscripcion
+            })
+
+        return Response({
+            'curso': {
+                'id': curso.id,
+                'nombre': f'{curso.grado.nombre}{curso.paralelo}',
+                'grado': curso.grado.nombre,
+                'paralelo': curso.paralelo,
+                'gestion': curso.gestion.anio
+            },
+            'estudiantes': estudiantes
+        })
+
 
 class InscripcionViewSet(viewsets.ModelViewSet):
     queryset = Inscripcion.objects.all()

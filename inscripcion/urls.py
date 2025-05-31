@@ -5,7 +5,7 @@ urlpatterns = [
     path('cursos/', CursoViewSet.as_view({'get': 'list', 'post': 'create'}), name='curso-list'),
     path('cursos/<int:pk>/', CursoViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='curso-detail'),
     path('cursos/<int:pk>/planilla/', CursoViewSet.as_view({'get': 'planilla'}), name='curso-planilla'),
-
+    path('cursos/<int:pk>/estudiantes/', CursoViewSet.as_view({'get': 'estudiantes_por_curso'}), name='curso-estudiantes'),
 
     path('inscripciones/', InscripcionViewSet.as_view({'get': 'list', 'post': 'create'}), name='inscripcion-list'),
     path('inscripciones/<int:pk>/', InscripcionViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='inscripcion-detail'),
