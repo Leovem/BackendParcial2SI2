@@ -43,3 +43,27 @@ class CursoMateria(models.Model):
 
     class Meta:
         db_table = 'curso_materia'
+
+
+class HorarioClase(models.Model):
+    DIAS_SEMANA = [
+        ('lunes', 'Lunes'),
+        ('martes', 'Martes'),
+        ('miércoles', 'Miércoles'),
+        ('jueves', 'Jueves'),
+        ('viernes', 'Viernes'),
+    ]
+
+    curso_materia = models.ForeignKey(CursoMateria, on_delete=models.CASCADE, related_name='horarios')
+    dia_semana = models.CharField(max_length=10, choices=DIAS_SEMANA)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+    aula = models.CharField(max_length=50, blank=True, null=True)
+
+    class Meta:
+        db_table = 'horario_clase'
+        ordering = ['dia_semana', 'hora_inicio']
+
+    def __str__(self):
+        return f'{self.curso_materia} - {self.dia_semana} {self.hora_inicio}-{self.hora_fin}'
+

@@ -1,11 +1,13 @@
 from django.urls import path
-from .views import CursoViewSet, InscripcionViewSet, MateriaViewSet, CursoMateriaViewSet
+from .views import CursoViewSet, InscripcionViewSet, MateriaViewSet, CursoMateriaViewSet, HorarioClaseViewSet
 
 urlpatterns = [
     path('cursos/', CursoViewSet.as_view({'get': 'list', 'post': 'create'}), name='curso-list'),
     path('cursos/<int:pk>/', CursoViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='curso-detail'),
     path('cursos/<int:pk>/planilla/', CursoViewSet.as_view({'get': 'planilla'}), name='curso-planilla'),
     path('cursos/<int:pk>/estudiantes/', CursoViewSet.as_view({'get': 'estudiantes_por_curso'}), name='curso-estudiantes'),
+    path('cursos/<int:pk>/horario/', CursoViewSet.as_view({'get': 'horario'}), name='curso-horario'),
+
 
     path('inscripciones/', InscripcionViewSet.as_view({'get': 'list', 'post': 'create'}), name='inscripcion-list'),
     path('inscripciones/<int:pk>/', InscripcionViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='inscripcion-detail'),
@@ -15,5 +17,8 @@ urlpatterns = [
 
     path('curso-materias/', CursoMateriaViewSet.as_view({'get': 'list', 'post': 'create'}), name='cursomateria-list'),
     path('curso-materias/<int:pk>/', CursoMateriaViewSet.as_view({'get': 'retrieve', 'put': 'update'}), name='cursomateria-detail'),
+
+    path('horarios/', HorarioClaseViewSet.as_view({'get': 'list', 'post': 'create'}), name='horario-list'),
+    path('horarios/<int:pk>/', HorarioClaseViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'}), name='horario-detail'),
 
 ]

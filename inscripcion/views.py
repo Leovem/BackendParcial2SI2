@@ -2,8 +2,8 @@ from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
 #from estructura_academica.models import Bimestre
-from .models import Curso, Inscripcion, Materia, CursoMateria
-from .serializers import CursoSerializer, InscripcionSerializer, MateriaSerializer, CursoMateriaSerializer
+from .models import Curso, Inscripcion, Materia, CursoMateria, HorarioClase
+from .serializers import CursoSerializer, InscripcionSerializer, MateriaSerializer, CursoMateriaSerializer, HorarioClaseSerializer
 
 
 class CursoViewSet(viewsets.ModelViewSet):
@@ -73,6 +73,44 @@ class CursoViewSet(viewsets.ModelViewSet):
             },
             'estudiantes': estudiantes
         })
+    
+    @action(detail=True, methods=['get'], url_path='horario')
+    def horario(self, request, pk=None):
+        curso = self.get_object()
+        gestion_id = request.query_params.get('gestion_id')
+
+        if not gestion_id:
+            return Response({'error': 'Debe proporcionar gestion_id como query param.'}, status=400)
+
+        if str(curso.gestion.id) != gestion_id:
+            return Response({'error': 'El curso no pertenece a la gestión indicada.'}, status=400)
+
+        horarios = HorarioClase.objects.filter(
+            curso_materia__curso=curso
+        ).select_related('curso_materia__materia', 'curso_materia__docente__persona')
+
+        datos = []
+        for h in horarios:
+            cm = h.curso_materia
+            docente = cm.docente
+            persona = getattr(docente, 'persona', None)
+            datos.append({
+                'dia_semana': h.dia_semana,
+                'hora_inicio': h.hora_inicio.strftime('%H:%M'),
+                'hora_fin': h.hora_fin.strftime('%H:%M'),
+                'materia': cm.materia.nombre,
+                'docente': f'{persona.nombres} {persona.apellidos}' if persona else '',
+                'aula': h.aula
+            })
+
+        return Response({
+            'curso': {
+                'id': curso.id,
+                'nombre': f'{curso.grado.nombre}{curso.paralelo}',
+                'gestion': curso.gestion.anio
+            },
+            'horario': sorted(datos, key=lambda x: (x['dia_semana'], x['hora_inicio']))
+        })
 
 
 class InscripcionViewSet(viewsets.ModelViewSet):
@@ -87,4 +125,7 @@ class CursoMateriaViewSet(viewsets.ModelViewSet):
     queryset = CursoMateria.objects.all()
     serializer_class = CursoMateriaSerializer
 
+class HorarioClaseViewSet(viewsets.ModelViewSet):
+    queryset = HorarioClase.objects.all()
+    serializer_class = HorarioClaseSerializer
 
