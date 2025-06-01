@@ -4,6 +4,7 @@ from .views import (
     GradoViewSet,
     GestionAcademicaViewSet,
     BimestreViewSet,
+    BimestresPorAnioView,
 )
 
 urlpatterns = [
@@ -22,4 +23,5 @@ urlpatterns = [
     # Bimestre
     path('bimestres/', BimestreViewSet.as_view({'get': 'list', 'post': 'create'}), name='bimestre-list'),
     path('bimestres/<int:pk>/', BimestreViewSet.as_view({'put': 'update', 'get': 'retrieve'}), name='bimestre-detail'),
+    path('bimestres-por-anio/<int:anio>/', BimestresPorAnioView.as_view(), name='bimestres-por-anio'),
 ]

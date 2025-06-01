@@ -51,7 +51,9 @@ INSTALLED_APPS = [
     'corsheaders',
     'usuarios',
     'estructura_academica',
-    'inscripcion'
+    'inscripcion',
+    'evaluacion_estudiante',
+    'alertas'
 ]
 
 MIDDLEWARE = [
