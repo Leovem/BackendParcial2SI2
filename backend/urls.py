@@ -10,5 +10,6 @@ urlpatterns = [
      path('inscripcion/', include('inscripcion.urls')),
      path('evaluacion/', include('evaluacion_estudiante.urls')),
      path('alertas/', include('alertas.urls')),
+     path('api/ia/', include('ia.urls'))
 
 ]

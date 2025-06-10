@@ -71,9 +71,6 @@ class PersonaSerializer(serializers.ModelSerializer):
         return Persona.objects.create(usuario=usuario, **validated_data)
     
 
-    
-
-
 
 class EstudianteSerializer(serializers.ModelSerializer):
     persona = PersonaSerializer()

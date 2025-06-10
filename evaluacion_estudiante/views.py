@@ -1,17 +1,31 @@
-from rest_framework import generics
+from rest_framework import viewsets
 from .models import Calificacion, Participacion, Asistencia
 from .serializers import CalificacionSerializer, ParticipacionSerializer, AsistenciaSerializer
+from .utils import obtener_ultima_gestion
 
-class RegistrarCalificacionView(generics.CreateAPIView):
-    queryset = Calificacion.objects.all()
+
+class CalificacionViewSet(viewsets.ModelViewSet):
     serializer_class = CalificacionSerializer
 
+    def get_queryset(self):
+        return Calificacion.objects.filter(
+            curso__gestion=obtener_ultima_gestion()
+        )
 
-class RegistrarParticipacionView(generics.CreateAPIView):
-    queryset = Participacion.objects.all()
+
+class ParticipacionViewSet(viewsets.ModelViewSet):
     serializer_class = ParticipacionSerializer
 
+    def get_queryset(self):
+        return Participacion.objects.filter(
+            curso__gestion=obtener_ultima_gestion()
+        )
 
-class RegistrarAsistenciaView(generics.CreateAPIView):
-    queryset = Asistencia.objects.all()
+
+class AsistenciaViewSet(viewsets.ModelViewSet):
     serializer_class = AsistenciaSerializer
+
+    def get_queryset(self):
+        return Asistencia.objects.filter(
+            curso__gestion=obtener_ultima_gestion()
+        )

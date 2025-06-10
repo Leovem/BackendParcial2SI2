@@ -10,6 +10,11 @@ class CalificacionSerializer(serializers.ModelSerializer):
         if not (0 <= value <= 100):
             raise serializers.ValidationError("La nota debe estar entre 0 y 100.")
         return value
+    
+    def create(self, validated_data):
+        from utils import obtener_ultima_gestion
+        validated_data['curso'].gestion_id = obtener_ultima_gestion().id  # redundancia válida si curso tiene gestión
+        return super().create(validated_data)
 
 
 

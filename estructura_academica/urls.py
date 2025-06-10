@@ -5,6 +5,8 @@ from .views import (
     GestionAcademicaViewSet,
     BimestreViewSet,
     BimestresPorAnioView,
+    UltimaGestionView,
+
 )
 
 urlpatterns = [
@@ -15,10 +17,14 @@ urlpatterns = [
     # Grado
     path('grados/', GradoViewSet.as_view({'get': 'list', 'post': 'create'}), name='grado-list'),
     path('grados/<int:pk>/', GradoViewSet.as_view({'put': 'update', 'get': 'retrieve'}), name='grado-detail'),
+    path('grados/por-nivel/<int:nivel_id>/', GradoViewSet.as_view({'get': 'por_nivel'}), name='grados-por-nivel'),
+
 
     # Gestión Académica
     path('gestiones/', GestionAcademicaViewSet.as_view({'get': 'list', 'post': 'create'}), name='gestion-list'),
     path('gestiones/<int:pk>/', GestionAcademicaViewSet.as_view({'put': 'update', 'get': 'retrieve'}), name='gestion-detail'),
+    path('gestiones/ultima/', UltimaGestionView.as_view(), name='gestion-ultima'),
+
 
     # Bimestre
     path('bimestres/', BimestreViewSet.as_view({'get': 'list', 'post': 'create'}), name='bimestre-list'),

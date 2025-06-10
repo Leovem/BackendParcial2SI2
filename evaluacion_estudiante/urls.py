@@ -1,8 +1,8 @@
 from django.urls import path
-from .views import RegistrarCalificacionView, RegistrarParticipacionView, RegistrarAsistenciaView
+from .views import CalificacionViewSet, ParticipacionViewSet, AsistenciaViewSet
 
 urlpatterns = [
-    path('registrar-calificacion/', RegistrarCalificacionView.as_view(), name='registrar-calificacion'),
-    path('registrar-participacion/', RegistrarParticipacionView.as_view(), name='registrar-participacion'),
-    path('registrar-asistencia/', RegistrarAsistenciaView.as_view(), name='registrar-asistencia'),
+    path('calificaciones/', CalificacionViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('participaciones/', ParticipacionViewSet.as_view({'get': 'list', 'post': 'create'})),
+    path('asistencias/', AsistenciaViewSet.as_view({'get': 'list', 'post': 'create'})),
 ]
