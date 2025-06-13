@@ -10,6 +10,9 @@ urlpatterns = [
      path('inscripcion/', include('inscripcion.urls')),
      path('evaluacion/', include('evaluacion_estudiante.urls')),
      path('alertas/', include('alertas.urls')),
-     path('api/ia/', include('ia.urls'))
+     path('api/ia/', include('ia.urls')),
+     path('api/docente/', include('docente.urls')),
+     path('api/estudiante/', include('estudiante.urls')),
+     path('api/padre/', include('padre.urls')),
 
 ]

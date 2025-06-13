@@ -54,7 +54,10 @@ INSTALLED_APPS = [
      'inscripcion',
      'evaluacion_estudiante',
      'alertas',
-     'ia'
+     'ia',
+     'docente',
+     'estudiante',
+     'padre',
 ]
 
 MIDDLEWARE = [
