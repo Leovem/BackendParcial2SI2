@@ -20,7 +20,7 @@ conn = psycopg2.connect(
 # Leer datos desde la vista
 #df = pd.read_sql("SELECT * FROM vista_resumen_rendimiento", conn)
 try:
-    df = pd.read_sql("SELECT * FROM vista_resumen_rendimiento", conn)
+    df = pd.read_sql("SELECT * FROM resumen_rendimiento", conn)
     print("Consulta ejecutada correctamente. Filas obtenidas:", len(df))
 except Exception as e:
     print("Error al ejecutar la consulta:", e)
