@@ -70,6 +70,11 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://frond-end-2-parcial-git-main-codewithelias-projects.vercel.app",
 ]
 
 ROOT_URLCONF = 'backend.urls'
