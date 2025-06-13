@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Calificacion, Participacion, Asistencia
+from .utils import obtener_ultima_gestion
 
 class CalificacionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,12 +11,15 @@ class CalificacionSerializer(serializers.ModelSerializer):
         if not (0 <= value <= 100):
             raise serializers.ValidationError("La nota debe estar entre 0 y 100.")
         return value
-    
-    def create(self, validated_data):
-        from utils import obtener_ultima_gestion
-        validated_data['curso'].gestion_id = obtener_ultima_gestion().id  # redundancia válida si curso tiene gestión
-        return super().create(validated_data)
 
+    def create(self, validated_data):
+        # Asignar gestión solo si no viene en el curso (opcional y depende de tu modelo)
+        curso = validated_data.get('curso')
+        if curso and curso.gestion_id is None:
+            curso.gestion_id = obtener_ultima_gestion().id
+            curso.save(update_fields=['gestion_id'])  # opcional si curso no se guarda automáticamente
+
+        return super().create(validated_data)
 
 
 class AsistenciaSerializer(serializers.ModelSerializer):

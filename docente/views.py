@@ -8,7 +8,7 @@ from evaluacion_estudiante.models import Asistencia, Calificacion
 from authapp.serializers import EstudianteSerializer
 from inscripcion.serializers import CursoMateriaSerializer
 from evaluacion_estudiante.serializers import AsistenciaSerializer, CalificacionSerializer
-from evaluacion_estudiante.utils import obtener_ultima_gestion
+from .utils import obtener_ultima_gestion
 
 
 class MisCursosView(APIView):
