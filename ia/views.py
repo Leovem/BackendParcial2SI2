@@ -17,9 +17,6 @@ class RecomendacionIAViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 
-
-
-
 class RendimientoIAViewSet(viewsets.ViewSet):
 
     @action(detail=False, methods=['get'])
