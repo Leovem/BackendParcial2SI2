@@ -3,7 +3,6 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import PrediccionML, RecomendacionIA
 from .serializers import PrediccionMLSerializer, RecomendacionIASerializer
-from .models import PrediccionML, RecomendacionIA
 from authapp.models import Estudiante
 from authapp.serializers import EstudianteSerializer
 
@@ -48,7 +47,7 @@ class RendimientoIAViewSet(viewsets.ViewSet):
         data_rec = [{
             "gestion_id": r.gestion_id,
             "bimestre_id": r.bimestre_id,
-            "recomendacion": r.recomendacion
+            "recomendaciones": r.recomendaciones  # ← aquí está el cambio clave
         } for r in recomendaciones]
 
         return Response({

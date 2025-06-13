@@ -18,7 +18,14 @@ conn = psycopg2.connect(
 )
 
 # Leer datos desde la vista
-df = pd.read_sql("SELECT * FROM v ista_resumen_rendimiento", conn)
+#df = pd.read_sql("SELECT * FROM vista_resumen_rendimiento", conn)
+try:
+    df = pd.read_sql("SELECT * FROM vista_resumen_rendimiento", conn)
+    print("Consulta ejecutada correctamente. Filas obtenidas:", len(df))
+except Exception as e:
+    print("Error al ejecutar la consulta:", e)
+    conn.close()
+    exit()
 
 # Eliminar filas con valores nulos
 df.dropna(subset=["promedio_nota", "porcentaje_asistencia", "puntaje_participacion"], inplace=True)
@@ -88,18 +95,24 @@ for i, row in df.iterrows():
 
     if not recomendaciones:
         recomendaciones.append("¡Buen trabajo! Sigue así.")
+    print("Insertando recomendaciones para estudiante", row["estudiante_id"], recomendaciones)
+    print("Valores:", row["porcentaje_asistencia"], row["puntaje_participacion"], row["promedio_nota"])
+    print("Total filas después del dropna:", len(df))
 
-    for r in recomendaciones:
-        cursor.execute("""
-            INSERT INTO recomendaciones_ia (estudiante_id, bimestre_id, gestion_id, recomendacion)
-            VALUES (%s, %s, %s, %s)
-            ON CONFLICT (estudiante_id, bimestre_id, gestion_id, recomendacion) DO NOTHING;
-        """, (
-            row["estudiante_id"],
-            row["bimestre_id"],
-            row["gestion_id"],
-            r
-        ))
+    # Inserta una sola fila con el arreglo completo de recomendaciones
+    cursor.execute("""
+        INSERT INTO recomendaciones_ia (estudiante_id, bimestre_id, gestion_id, recomendaciones)
+        VALUES (%s, %s, %s, %s)
+        ON CONFLICT (estudiante_id, bimestre_id, gestion_id) DO UPDATE
+        SET recomendaciones = EXCLUDED.recomendaciones,
+            fecha_generacion = CURRENT_TIMESTAMP;
+    """, (
+        row["estudiante_id"],
+        row["bimestre_id"],
+        row["gestion_id"],
+        recomendaciones  # se convierte en arreglo PostgreSQL automáticamente
+    ))
+
 
 conn.commit()
 cursor.close()

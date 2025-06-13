@@ -1,5 +1,6 @@
 # IA/models.py
 from django.db import models
+from django.contrib.postgres.fields import ArrayField
 from authapp.models import Estudiante
 from estructura_academica.models import GestionAcademica, Bimestre
 
@@ -18,7 +19,7 @@ class RecomendacionIA(models.Model):
     estudiante = models.ForeignKey(Estudiante, on_delete=models.RESTRICT)
     bimestre = models.ForeignKey(Bimestre, on_delete=models.RESTRICT)
     gestion = models.ForeignKey(GestionAcademica, on_delete=models.RESTRICT)
-    recomendaciones = models.JSONField()  # Django 3.1+ / PostgreSQL
+    recomendaciones = ArrayField(models.TextField())
     fecha_generacion = models.DateTimeField(auto_now_add=True)
 
     class Meta:

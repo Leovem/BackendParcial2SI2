@@ -5,7 +5,7 @@ from .views import PrediccionMLViewSet, RecomendacionIAViewSet, RendimientoIAVie
 router = DefaultRouter()
 router.register(r'predicciones', PrediccionMLViewSet, basename='prediccionml')
 router.register(r'recomendaciones', RecomendacionIAViewSet, basename='recomendacionia')
-router.register(r'rendimiento', RendimientoIAViewSet, basename='rendimiento')
+router.register(r'rendimiento', RendimientoIAViewSet, basename='rendimiento')   # usar este para obtner el rendimiento y recomendacion
 
 urlpatterns = [
     path('', include(router.urls)),
