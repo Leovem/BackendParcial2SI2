@@ -1,5 +1,4 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
 
@@ -12,14 +11,15 @@ from evaluacion_estudiante.utils import obtener_ultima_gestion
 
 
 class MisCursosView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request):
-        docente = request.user.persona.docente
+        docente_id = request.query_params.get("docente_id")
+        if not docente_id:
+            return Response({"error": "Falta el parámetro docente_id"}, status=400)
+
         gestion = obtener_ultima_gestion()
 
         cursos = CursoMateria.objects.filter(
-            docente=docente,
+            docente_id=docente_id,
             curso__gestion=gestion
         )
         serializer = CursoMateriaSerializer(cursos, many=True)
@@ -27,14 +27,12 @@ class MisCursosView(APIView):
 
 
 class EstudiantesPorCursoView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def get(self, request, curso_id):
         gestion = obtener_ultima_gestion()
         inscripciones = Inscripcion.objects.filter(
             curso_id=curso_id,
             gestion=gestion
-        ).select_related('estudiante')
+        ).select_related('estudiante__persona')
 
         estudiantes = [i.estudiante for i in inscripciones]
         serializer = EstudianteSerializer(estudiantes, many=True)
@@ -42,17 +40,18 @@ class EstudiantesPorCursoView(APIView):
 
 
 class RegistrarAsistenciaView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
-        docente = request.user.persona.docente
+        docente_id = request.data.get("docente_id")
+        if not docente_id:
+            return Response({"error": "Falta el campo docente_id"}, status=400)
+
         serializer = AsistenciaSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         curso = serializer.validated_data['curso']
         materia = serializer.validated_data['materia']
 
-        if not CursoMateria.objects.filter(curso=curso, materia=materia, docente=docente).exists():
+        if not CursoMateria.objects.filter(curso=curso, materia=materia, docente_id=docente_id).exists():
             raise PermissionDenied("No puedes registrar asistencia en este curso y materia.")
 
         serializer.save()
@@ -60,17 +59,18 @@ class RegistrarAsistenciaView(APIView):
 
 
 class RegistrarCalificacionView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request):
-        docente = request.user.persona.docente
+        docente_id = request.data.get("docente_id")
+        if not docente_id:
+            return Response({"error": "Falta el campo docente_id"}, status=400)
+
         serializer = CalificacionSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
         curso = serializer.validated_data['curso']
         materia = serializer.validated_data['materia']
 
-        if not CursoMateria.objects.filter(curso=curso, materia=materia, docente=docente).exists():
+        if not CursoMateria.objects.filter(curso=curso, materia=materia, docente_id=docente_id).exists():
             raise PermissionDenied("No puedes registrar calificaciones en este curso y materia.")
 
         serializer.save()

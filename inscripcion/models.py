@@ -39,7 +39,6 @@ class CursoMateria(models.Model):
     curso = models.ForeignKey(Curso, on_delete=models.RESTRICT)
     materia = models.ForeignKey(Materia, on_delete=models.RESTRICT)
     docente = models.ForeignKey('authapp.Docente', on_delete=models.RESTRICT)
-    bimestre = models.ForeignKey('estructura_academica.Bimestre', on_delete=models.RESTRICT)
 
     class Meta:
         db_table = 'curso_materia'

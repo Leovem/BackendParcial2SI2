@@ -1,10 +1,5 @@
 from django.urls import path
-from .views import (
-    MisCursosView,
-    EstudiantesPorCursoView,
-    RegistrarAsistenciaView,
-    RegistrarCalificacionView
-)
+from .views import MisCursosView, EstudiantesPorCursoView, RegistrarAsistenciaView, RegistrarCalificacionView
 
 urlpatterns = [
     path('mis-cursos/', MisCursosView.as_view(), name='docente-mis-cursos'),
