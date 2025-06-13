@@ -26,7 +26,9 @@ SECRET_KEY = 'django-insecure-86d2%#uqh=e1q3f!5_00blwow6e68^)btyq_t%%ld_w$u*$umr
 DEBUG = True
 
 #ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.10', 'http://backendparcial2si2-production.up.railway.app']
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.1.10', 
+                 'backendparcial2si2-production.up.railway.app', 
+                 "frond-end-2-parcial-git-main-codewithelias-projects.vercel.app"]
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -73,9 +75,7 @@ MIDDLEWARE = [
     
 ]
 
-CORS_ALLOWED_ORIGINS = [
-    "https://frond-end-2-parcial-git-main-codewithelias-projects.vercel.app",
-]
+
 
 ROOT_URLCONF = 'backend.urls'
 
