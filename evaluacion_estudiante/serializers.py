@@ -3,9 +3,15 @@ from .models import Calificacion, Participacion, Asistencia
 from .utils import obtener_ultima_gestion
 
 class CalificacionSerializer(serializers.ModelSerializer):
+    materia = serializers.CharField(source='materia.nombre')  # Mostrar nombre de la materia
+    curso = serializers.SerializerMethodField()  # Mostrar nombre del curso (opcional)
+
     class Meta:
         model = Calificacion
-        fields = '__all__'
+        fields = ['id', 'nota', 'observacion', 'fecha_registro', 'estudiante', 'curso', 'materia', 'bimestre']
+
+    def get_curso(self, obj):
+        return str(obj.curso)  # Usa el __str__ del modelo Curso
 
     def validate_nota(self, value):
         if not (0 <= value <= 100):
@@ -13,13 +19,12 @@ class CalificacionSerializer(serializers.ModelSerializer):
         return value
 
     def create(self, validated_data):
-        # Asignar gestión solo si no viene en el curso (opcional y depende de tu modelo)
         curso = validated_data.get('curso')
         if curso and curso.gestion_id is None:
             curso.gestion_id = obtener_ultima_gestion().id
-            curso.save(update_fields=['gestion_id'])  # opcional si curso no se guarda automáticamente
-
+            curso.save(update_fields=['gestion_id'])
         return super().create(validated_data)
+
 
 
 class AsistenciaSerializer(serializers.ModelSerializer):
