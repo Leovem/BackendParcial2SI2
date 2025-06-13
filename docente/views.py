@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import PermissionDenied
+from .serializers import CursoMateriaDetalleSerializer
 
 from inscripcion.models import CursoMateria, Inscripcion
 from evaluacion_estudiante.models import Asistencia, Calificacion
@@ -22,7 +23,7 @@ class MisCursosView(APIView):
             docente_id=docente_id,
             curso__gestion=gestion
         )
-        serializer = CursoMateriaSerializer(cursos, many=True)
+        serializer = CursoMateriaDetalleSerializer(cursos, many=True)
         return Response(serializer.data)
 
 
